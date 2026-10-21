@@ -150,7 +150,7 @@
 
         <div class="custom-row">
             <label>Своя скорость:</label>
-            <input type="number" id="customMultiplier" value="50" min="1">
+            <input type="number" id="customMultiplier" value="50" min="1" step="1" required oninput="this.setCustomValidity('')">
             <button onclick="accelerateCustom()">OK</button>
         </div>
     </div>
@@ -207,11 +207,16 @@
         }
 
         function accelerateCustom() {
-            const val = parseInt(document.getElementById('customMultiplier').value);
-            if (val >= 1) {
-                sendCommand('accelerate', { multiplier: val });
-                document.querySelectorAll('.btn-group button').forEach(b => b.classList.remove('active'));
+            const input = document.getElementById('customMultiplier');
+            const val = Number(input.value);
+            if (!Number.isInteger(val) || val < 1) {
+                input.setCustomValidity('Введите целое число не меньше 1');
+                input.reportValidity();
+                return;
             }
+            input.setCustomValidity('');
+            sendCommand('accelerate', { multiplier: val });
+            document.querySelectorAll('.btn-group button').forEach(b => b.classList.remove('active'));
         }
 
         function togglePause() {
