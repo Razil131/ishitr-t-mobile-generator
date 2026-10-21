@@ -1,34 +1,43 @@
 package ru.tmobile.generator.controller;
 
 import ru.tmobile.generator.service.VirtualClockService;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.Instant;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 @RestController
 @RequestMapping("/api/v1/generator/time")
 @RequiredArgsConstructor
-public class TimeController {
+public class TimeController{
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+    
     private final VirtualClockService virtualClock;
+    
+    @Value("${generator.timezone:Europe/Moscow}")
+    private ZoneId timeZone;
 
     @GetMapping
     public TimeStatusResponse getStatus(){
         return new TimeStatusResponse(
-            virtualClock.getRealTime(),
-            virtualClock.instant(),
+            formatInstant(virtualClock.getRealTime()),
+            formatInstant(virtualClock.instant()),
             virtualClock.getMultiplier(),
             virtualClock.isPaused()
         );
     }
 
     @PostMapping("/accelerate")
-    public TimeStatusResponse accelerate(@RequestBody AccelerateRequest request){
-        virtualClock.accelerate(request.getMultiplier());
+    public TimeStatusResponse accelerate(@Valid @RequestBody AccelerateRequest request) {
+        virtualClock.accelerate(request.multiplier());
         return getStatus();
     }
 
@@ -49,33 +58,22 @@ public class TimeController {
         virtualClock.reset();
         return getStatus();
     }
-
-    @Data
-    public static class TimeStatusResponse{
-        @JsonProperty("real_time")
-        private String real_time;
-
-        @JsonProperty("virtual_time")
-        private String virtual_time;
-
-
-        private double multiplier;
-
-        @JsonProperty("is_paused")
-        private boolean paused;
-
-        public TimeStatusResponse(Instant real, Instant virt, double mult, boolean paused){
-            DateTimeFormatter fmt = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
-            this.real_time = real.atZone(java.time.ZoneOffset.UTC).format(fmt);
-            this.virtual_time = virt.atZone(java.time.ZoneOffset.UTC).format(fmt);
-            this.multiplier = mult;
-            this.paused = paused;
-
-        }
+    
+    private String formatInstant(Instant instant){
+        return instant.atZone(timeZone).format(FORMATTER);
     }
 
-    @Data
-    public static class AccelerateRequest{
-        private int multiplier;
-    }
+    public record TimeStatusResponse(
+        String real_time,
+        String virtual_time,
+        int multiplier,
+        boolean is_paused
+    ) {}
+
+    public record AccelerateRequest(
+        @NotNull(message = "multiplier is required")
+        @Min(value = 1, message = "multiplier must be >= 1")
+        @Max(value = 1_000_000, message = "multiplier must be <= 1_000_000")
+        Integer multiplier
+    ) {}
 }
