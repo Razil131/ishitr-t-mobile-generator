@@ -1,0 +1,1985 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Админ-панель Генератора — Т-Банк стиль</title>
+<style>
+  :root {
+    --bg-primary: #1C1C1E;
+    --bg-secondary: #2C2C2E;
+    --bg-tertiary: #3A3A3C;
+    --bg-card: #2C2C2E;
+    --bg-card-hover: #353537;
+    --yellow: #FFDD2D;
+    --yellow-hover: #E6C728;
+    --yellow-dark: #3D3520;
+    --green: #34C759;
+    --green-dark: #1B3D2A;
+    --red: #FF453A;
+    --red-dark: #3D1B1A;
+    --pink: #FF6B8A;
+    --teal: #5AC8C8;
+    --orange: #FF9F0A;
+    --text-primary: #FFFFFF;
+    --text-secondary: #8E8E93;
+    --text-tertiary: #636366;
+    --border-color: #38383A;
+    --radius: 16px;
+    --radius-sm: 12px;
+    --radius-xs: 8px;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Status Bar */
+  .status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    background: var(--bg-primary);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .status-bar .time { font-size: 15px; font-weight: 700; }
+  .status-bar .network { font-size: 13px; color: var(--text-secondary); }
+
+  /* Global Header */
+  .global-header {
+    padding: 8px 24px 16px;
+    background: var(--bg-primary);
+    position: sticky;
+    top: 36px;
+    z-index: 99;
+  }
+
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .header-title {
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  .header-subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .time-indicators {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .time-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+  }
+
+  .time-badge.virtual {
+    background: var(--yellow-dark);
+    border-color: var(--yellow);
+    color: var(--yellow);
+  }
+
+  .time-badge.virtual.paused {
+    background: var(--red-dark);
+    border-color: var(--red);
+    color: var(--red);
+  }
+
+  .status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .status-badge.active {
+    background: var(--green-dark);
+    color: var(--green);
+  }
+
+  .status-badge.paused {
+    background: var(--red-dark);
+    color: var(--red);
+  }
+
+  /* Main Content */
+  .main-content {
+    padding: 0 16px 100px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* Cards */
+  .card {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+    border: 1px solid var(--border-color);
+  }
+
+  .card-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+
+  .card-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .card-subtitle {
+    font-size: 14px;
+    color: var(--text-secondary);
+  }
+
+  /* Tab Navigation */
+  .tab-nav {
+    display: flex;
+    gap: 8px;
+    padding: 0 16px 16px;
+    max-width: 600px;
+    margin: 0 auto;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .tab-nav::-webkit-scrollbar { display: none; }
+
+  .tab-btn {
+    flex: 1;
+    min-width: 120px;
+    padding: 12px 16px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+
+  .tab-btn.active {
+    background: var(--yellow);
+    color: #000;
+  }
+
+  .tab-btn:hover:not(.active) {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+  }
+
+  /* Tab Content */
+  .tab-content {
+    display: none;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 24px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+
+  .btn-primary {
+    background: var(--yellow);
+    color: #000;
+  }
+
+  .btn-primary:hover {
+    background: var(--yellow-hover);
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .btn-secondary {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+  }
+
+  .btn-secondary:hover {
+    background: #454547;
+  }
+
+  .btn-danger {
+    background: var(--red);
+    color: #fff;
+  }
+
+  .btn-danger:hover {
+    background: #E03E34;
+  }
+
+  .btn-success {
+    background: var(--green);
+    color: #fff;
+  }
+
+  .btn-success:hover {
+    background: #2DB84D;
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--yellow);
+    border: 1.5px solid var(--yellow);
+  }
+
+  .btn-outline:hover {
+    background: var(--yellow-dark);
+  }
+
+  .btn-full {
+    width: 100%;
+  }
+
+  .btn-sm {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+
+  .btn-icon {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
+  }
+
+  /* Input Fields */
+  .input-group {
+    margin-bottom: 16px;
+  }
+
+  .input-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+  }
+
+  .input-group label .required {
+    color: var(--red);
+  }
+
+  .input-field {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--radius-xs);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 15px;
+    font-family: inherit;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+
+  .input-field:focus {
+    border-color: var(--yellow);
+  }
+
+  .input-field.error {
+    border-color: var(--red);
+  }
+
+  .input-field::placeholder {
+    color: var(--text-tertiary);
+  }
+
+  select.input-field {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238E8E93' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+  }
+
+  .input-error {
+    font-size: 12px;
+    color: var(--red);
+    margin-top: 4px;
+    display: none;
+  }
+
+  .input-error.visible {
+    display: block;
+  }
+
+  /* Toggle / Switch */
+  .toggle-group {
+    display: flex;
+    background: var(--bg-primary);
+    border-radius: var(--radius-xs);
+    padding: 3px;
+    margin-bottom: 16px;
+  }
+
+  .toggle-btn {
+    flex: 1;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: inherit;
+  }
+
+  .toggle-btn.active {
+    background: var(--yellow);
+    color: #000;
+  }
+
+  /* Tables */
+  .table-container {
+    overflow-x: auto;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  th {
+    background: var(--bg-tertiary);
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 12px 16px;
+    border-top: 1px solid var(--border-color);
+    white-space: nowrap;
+  }
+
+  tr:hover td {
+    background: var(--bg-card-hover);
+  }
+
+  .table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .table-header h3 {
+    font-size: 17px;
+    font-weight: 700;
+  }
+
+  /* Progress Bar */
+  .progress-bar-container {
+    width: 100%;
+    height: 8px;
+    background: var(--bg-primary);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 8px 0;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease;
+  }
+
+  .progress-bar-fill.yellow { background: var(--yellow); }
+  .progress-bar-fill.teal { background: var(--teal); }
+  .progress-bar-fill.green { background: var(--green); }
+  .progress-bar-fill.red { background: var(--red); }
+  .progress-bar-fill.pink { background: var(--pink); }
+
+  /* Alert / Warning Card */
+  .alert-card {
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .alert-card:hover { opacity: 0.9; }
+
+  .alert-card.warning {
+    background: var(--yellow-dark);
+    border: 1.5px solid var(--yellow);
+  }
+
+  .alert-card.danger {
+    background: var(--red-dark);
+    border: 1.5px solid var(--red);
+  }
+
+  .alert-card.info {
+    background: #1B2D3D;
+    border: 1.5px solid #5AC8FA;
+  }
+
+  .alert-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .alert-title { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+  .alert-desc { font-size: 13px; color: var(--text-secondary); }
+
+  /* Participant Row */
+  .participant-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .participant-row:last-child { border-bottom: none; }
+
+  .avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: #000;
+    flex-shrink: 0;
+  }
+
+  .avatar.pink { background: var(--pink); }
+  .avatar.teal { background: var(--teal); }
+  .avatar.yellow { background: var(--yellow); }
+  .avatar.green { background: var(--green); }
+  .avatar.orange { background: var(--orange); }
+
+  .participant-info { flex: 1; }
+  .participant-name { font-size: 15px; font-weight: 600; }
+  .participant-detail { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+  .role-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-left: 8px;
+  }
+
+  .role-badge.owner {
+    background: var(--yellow);
+    color: #000;
+  }
+
+  .role-badge.member {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+  }
+
+  /* Donut Chart */
+  .donut-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+  }
+
+  .donut-chart {
+    position: relative;
+    width: 200px;
+    height: 200px;
+  }
+
+  .donut-chart svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+  }
+
+  .donut-chart circle {
+    fill: none;
+    stroke-width: 28;
+    transition: stroke-dasharray 0.5s ease;
+  }
+
+  .donut-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+
+  .donut-center-value {
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  .donut-center-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+  }
+
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .legend-value {
+    margin-left: auto;
+    color: var(--text-secondary);
+    font-size: 13px;
+  }
+
+  /* Stat Row */
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .stat-row:last-child { border-bottom: none; }
+
+  .stat-label { font-size: 14px; color: var(--text-secondary); }
+  .stat-value { font-size: 16px; font-weight: 700; }
+  .stat-value.large { font-size: 32px; }
+
+  /* Usage Display */
+  .usage-display {
+    margin: 12px 0;
+  }
+
+  .usage-value {
+    font-size: 32px;
+    font-weight: 700;
+  }
+
+  .usage-value span {
+    font-size: 16px;
+    color: var(--text-secondary);
+    font-weight: 400;
+  }
+
+  .usage-hint {
+    font-size: 13px;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .usage-hint.yellow { color: var(--yellow); }
+  .usage-hint.teal { color: var(--teal); }
+
+  /* Action Cards Grid */
+  .action-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .action-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .action-card:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--yellow);
+  }
+
+  .action-card-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+
+  .action-card-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .action-card-desc {
+    font-size: 11px;
+    color: var(--text-secondary);
+  }
+
+  /* Time Control Block */
+  .time-control {
+    text-align: center;
+    padding: 24px 0;
+  }
+
+  .time-display {
+    font-size: 48px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 4px;
+  }
+
+  .time-display.virtual-time {
+    color: var(--yellow);
+  }
+
+  .time-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+  }
+
+  .multiplier-display {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--yellow);
+    margin-bottom: 20px;
+  }
+
+  .time-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* Toast Notifications */
+  .toast-container {
+    position: fixed;
+    top: 60px;
+    right: 16px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 340px;
+  }
+
+  .toast {
+    padding: 14px 18px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 500;
+    animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s forwards;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  }
+
+  .toast.success {
+    background: var(--green-dark);
+    border: 1px solid var(--green);
+    color: var(--green);
+  }
+
+  .toast.error {
+    background: var(--red-dark);
+    border: 1px solid var(--red);
+    color: var(--red);
+  }
+
+  .toast.info {
+    background: #1B2D3D;
+    border: 1px solid #5AC8FA;
+    color: #5AC8FA;
+  }
+
+  @keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+
+  @keyframes fadeOut {
+    to { opacity: 0; transform: translateX(50px); }
+  }
+
+  /* Spinner */
+  .spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-color);
+    border-top-color: var(--yellow);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    display: inline-block;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .btn .spinner {
+    border-top-color: #000;
+    border-color: rgba(0,0,0,0.2);
+  }
+
+  /* Empty State */
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-secondary);
+  }
+
+  .empty-state-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+    opacity: 0.5;
+  }
+
+  .empty-state-text {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* Section Divider */
+  .section-divider {
+    height: 1px;
+    background: var(--border-color);
+    margin: 20px 0;
+  }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .action-grid {
+      grid-template-columns: 1fr;
+    }
+    .time-display {
+      font-size: 36px;
+    }
+    .usage-value {
+      font-size: 26px;
+    }
+  }
+
+  /* Modal Overlay */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 200;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .modal-overlay.visible {
+    display: flex;
+  }
+
+  .modal {
+    background: var(--bg-secondary);
+    border-radius: 20px 20px 0 0;
+    padding: 24px;
+    width: 100%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  .modal-handle {
+    width: 36px;
+    height: 4px;
+    background: var(--text-tertiary);
+    border-radius: 2px;
+    margin: 0 auto 20px;
+  }
+
+  .modal-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+
+  /* History Item */
+  .history-item {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .history-item:last-child { border-bottom: none; }
+
+  .history-date {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .history-detail {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .history-amount {
+    font-size: 16px;
+    font-weight: 700;
+    float: right;
+    margin-top: -28px;
+  }
+
+  /* Navigation arrows for back */
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    color: var(--yellow);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 8px 0;
+    font-family: inherit;
+    margin-bottom: 16px;
+  }
+
+  .back-btn:hover { opacity: 0.8; }
+
+  /* Participant card in management */
+  .participant-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .participant-card .avatar { width: 48px; height: 48px; font-size: 18px; }
+
+  .participant-card-info { flex: 1; }
+  .participant-card-name { font-size: 16px; font-weight: 700; }
+  .participant-card-limit { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+  .participant-card-used { font-size: 13px; color: var(--teal); margin-top: 2px; font-weight: 600; }
+
+  .participant-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .participant-actions .btn-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+
+  .btn-icon.edit {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-icon.remove {
+    background: var(--red-dark);
+    color: var(--red);
+    border: none;
+    cursor: pointer;
+  }
+
+  /* Dashed placeholder */
+  .dashed-placeholder {
+    border: 2px dashed var(--border-color);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+    color: var(--text-tertiary);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .dashed-placeholder:hover {
+    border-color: var(--yellow);
+    color: var(--yellow);
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg-primary); }
+  ::-webkit-scrollbar-thumb { background: var(--bg-tertiary); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- Status Bar -->
+<div class="status-bar">
+  <span class="time" id="realTimeDisplay">16:03</span>
+  <span class="network">LTE 67%</span>
+</div>
+
+<!-- Global Header -->
+<div class="global-header">
+  <div class="header-row">
+    <div>
+      <div class="header-title">️ Админ-панель</div>
+      <div class="header-subtitle">Генератор событий Т-Мобайл</div>
+    </div>
+    <div class="status-badge active" id="globalStatus">Активна</div>
+  </div>
+  <div class="time-indicators">
+    <div class="time-badge">
+       Реальное: <span id="realTimeBadge">20.10.2026 16:03:00</span>
+    </div>
+    <div class="time-badge virtual" id="virtualTimeBadge">
+      ⚡ Виртуальное: <span id="virtualTimeBadgeText">20.10.2026 16:03:00</span>
+    </div>
+  </div>
+</div>
+
+<!-- Tab Navigation -->
+<div class="tab-nav">
+  <button class="tab-btn active" data-tab="dashboard">📊 Дашборд</button>
+  <button class="tab-btn" data-tab="time">⏰ Время</button>
+  <button class="tab-btn" data-tab="events">🎭 События</button>
+  <button class="tab-btn" data-tab="tariffs">📋 Тарифы</button>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Main Content -->
+<div class="main-content">
+
+  <!-- ==================== TAB 1: DASHBOARD ==================== -->
+  <div class="tab-content active" id="tab-dashboard">
+
+    <!-- Time Cards -->
+    <div class="card">
+      <div class="card-label">Виртуальное время</div>
+      <div class="time-display virtual-time" id="dashVirtualTime" style="font-size:36px; text-align:left;">16:03:00</div>
+      <div class="time-label">Множитель: <strong id="dashMultiplier">×1</strong> · Статус: <strong id="dashStatus" style="color:var(--green)">Активна</strong></div>
+      <button class="btn btn-outline btn-sm" onclick="switchTab('time')">Перейти к управлению →</button>
+    </div>
+
+    <!-- Users Table -->
+    <div class="table-header">
+      <h3>👥 Пользователи</h3>
+      <button class="btn btn-secondary btn-sm" onclick="refreshUsers()">🔄 Обновить</button>
+    </div>
+    <div class="table-container" id="usersTableContainer">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Телефон</th>
+            <th>Группа</th>
+            <th>Роль</th>
+            <th>Статус</th>
+          </tr>
+        </thead>
+        <tbody id="usersTableBody">
+          <tr><td colspan="5"><div class="empty-state"><div class="spinner"></div><p style="margin-top:8px">Загрузка...</p></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="height:16px"></div>
+
+    <!-- Groups Table -->
+    <div class="table-header">
+      <h3>👨‍👩‍👧‍👦 Семейные группы</h3>
+      <button class="btn btn-secondary btn-sm" onclick="refreshGroups()">🔄 Обновить</button>
+    </div>
+    <div class="table-container" id="groupsTableContainer">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Владелец</th>
+            <th>Статус</th>
+            <th>Участники</th>
+            <th>Создана</th>
+          </tr>
+        </thead>
+        <tbody id="groupsTableBody">
+          <tr><td colspan="5"><div class="empty-state"><div class="spinner"></div><p style="margin-top:8px">Загрузка...</p></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="height:16px"></div>
+
+    <!-- Tariffs Table -->
+    <div class="table-header">
+      <h3>💳 Тарифы</h3>
+      <button class="btn btn-secondary btn-sm" onclick="refreshTariffs()">🔄 Обновить</button>
+    </div>
+    <div class="table-container" id="tariffsTableContainer">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Трафик (ГБ)</th>
+            <th>Минуты</th>
+          </tr>
+        </thead>
+        <tbody id="tariffsTableBody">
+          <tr><td colspan="4"><div class="empty-state"><div class="spinner"></div><p style="margin-top:8px">Загрузка...</p></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ==================== TAB 2: TIME MANAGEMENT ==================== -->
+  <div class="tab-content" id="tab-time">
+
+    <div class="card">
+      <div class="time-control">
+        <div class="time-label">Виртуальное время</div>
+        <div class="time-display virtual-time" id="timeControlVirtual">16:03:00</div>
+        <div class="multiplier-display" id="timeControlMultiplier">×1</div>
+        <div class="time-label" id="timeControlStatus" style="color:var(--green)">● Генерация активна</div>
+      </div>
+
+      <div class="input-group">
+        <label>Множитель времени</label>
+        <input type="number" class="input-field" id="multiplierInput" value="1000" min="1" placeholder="Введите множитель (10, 100, 1000...)">
+        <div class="input-error" id="multiplierError"></div>
+      </div>
+
+      <div class="time-actions">
+        <button class="btn btn-primary btn-full" id="btnAccelerate" onclick="accelerateTime()">
+          ⚡ Ускорить время
+        </button>
+        <button class="btn btn-secondary btn-full" onclick="resetTime()">
+          🔄 Сбросить в реальное время
+        </button>
+        <button class="btn btn-secondary btn-full" id="btnPause" onclick="togglePause()">
+          ⏸ Пауза
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Информация</div>
+      <div class="stat-row">
+        <span class="stat-label">Реальное время</span>
+        <span class="stat-value" id="infoRealTime">16:03:00</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Виртуальное время</span>
+        <span class="stat-value" id="infoVirtualTime" style="color:var(--yellow)">16:03:00</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Множитель</span>
+        <span class="stat-value" id="infoMultiplier">×1</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Статус</span>
+        <span class="stat-value" id="infoStatus" style="color:var(--green)">Активна</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== TAB 3: EVENT EMULATION ==================== -->
+  <div class="tab-content" id="tab-events">
+
+    <!-- Target Selection -->
+    <div class="card">
+      <div class="card-label">Выбор цели</div>
+      <div class="toggle-group">
+        <button class="toggle-btn active" data-target="user" onclick="setTargetMode('user')">Для пользователя</button>
+        <button class="toggle-btn" data-target="group" onclick="setTargetMode('group')">Для группы</button>
+      </div>
+
+      <div id="targetUserFields">
+        <div class="input-group">
+          <label>Группа</label>
+          <select class="input-field" id="eventGroupSelect" onchange="onEventGroupChange()">
+            <option value="">Выберите группу...</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Пользователь</label>
+          <select class="input-field" id="eventUserSelect">
+            <option value="">Выберите пользователя...</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="targetGroupFields" style="display:none">
+        <div class="input-group">
+          <label>Группа</label>
+          <select class="input-field" id="eventGroupSelect2">
+            <option value="">Выберите группу...</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Background Generation -->
+    <div class="card">
+      <div class="card-label">Фоновая генерация</div>
+      <div class="toggle-group">
+        <button class="toggle-btn active" data-mode="simple" onclick="setBgMode('simple')">Простой (интервал)</button>
+        <button class="toggle-btn" data-mode="realistic" onclick="setBgMode('realistic')">Реалистичный (профиль)</button>
+      </div>
+
+      <div id="simpleModeFields">
+        <div class="input-group">
+          <label>Интервал (секунды)</label>
+          <input type="number" class="input-field" id="bgInterval" value="5" min="1">
+        </div>
+      </div>
+
+      <div id="realisticModeFields" style="display:none">
+        <div class="input-group">
+          <label>Профиль</label>
+          <select class="input-field" id="bgProfile">
+            <option value="STANDARD">Standard — обычное использование</option>
+            <option value="TRIP">Trip — симуляция поездки</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-full" onclick="startBackgroundGen()">
+        ▶ Старт фоновой генерации
+      </button>
+    </div>
+
+    <!-- Instant Actions -->
+    <div class="card-label" style="margin-bottom:12px">Мгновенные действия</div>
+    <div class="action-grid">
+      <div class="action-card" onclick="openModal('instantDeduct')">
+        <div class="action-card-icon">💸</div>
+        <div class="action-card-title">Списать ГБ/мин</div>
+        <div class="action-card-desc">Мгновенное списание ресурса</div>
+      </div>
+      <div class="action-card" onclick="openModal('anomaly')">
+        <div class="action-card-icon">🔥</div>
+        <div class="action-card-title">Запустить аномалию</div>
+        <div class="action-card-desc">Резкое потребление за 6 часов</div>
+      </div>
+      <div class="action-card" onclick="openModal('delayed')">
+        <div class="action-card-icon"></div>
+        <div class="action-card-title">Запоздалое событие</div>
+        <div class="action-card-desc">Событие с прошедшим временем</div>
+      </div>
+      <div class="action-card" onclick="openModal('bulk')">
+        <div class="action-card-icon">📦</div>
+        <div class="action-card-title">Массовая генерация</div>
+        <div class="action-card-desc">N событий для всех пользователей</div>
+      </div>
+    </div>
+
+    <!-- Active Generations Table -->
+    <div class="table-header">
+      <h3>🔄 Активные генерации</h3>
+    </div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Пользователь/Группа</th>
+            <th>Тип</th>
+            <th>Режим</th>
+            <th>Статус</th>
+            <th>Запущено</th>
+            <th>Действия</th>
+          </tr>
+        </thead>
+        <tbody id="activeGenTableBody">
+          <tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">📭</div><div class="empty-state-text">Нет активных генераций</div></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ==================== TAB 4: TARIFFS ==================== -->
+  <div class="tab-content" id="tab-tariffs">
+
+    <div class="card">
+      <div class="card-label">Создание тарифа</div>
+
+      <div class="input-group">
+        <label>Название тарифа <span class="required">*</span></label>
+        <input type="text" class="input-field" id="tariffName" placeholder="Например: Семейный">
+        <div class="input-error" id="tariffNameError"></div>
+      </div>
+
+      <div class="input-group">
+        <label>Общий трафик (ГБ) <span class="required">*</span></label>
+        <input type="number" class="input-field" id="tariffTraffic" placeholder="50" min="0" step="0.01">
+        <div class="input-error" id="tariffTrafficError"></div>
+      </div>
+
+      <div class="input-group">
+        <label>Общие минуты <span class="required">*</span></label>
+        <input type="number" class="input-field" id="tariffMinutes" placeholder="500" min="0">
+        <div class="input-error" id="tariffMinutesError"></div>
+      </div>
+
+      <button class="btn btn-primary btn-full" id="btnCreateTariff" onclick="createTariff()">
+        ✨ Создать тариф
+      </button>
+    </div>
+
+    <div class="table-header">
+      <h3>📋 Созданные тарифы</h3>
+      <button class="btn btn-secondary btn-sm" onclick="refreshTariffs()">🔄 Обновить</button>
+    </div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Трафик (ГБ)</th>
+            <th>Минуты</th>
+            <th>Действия</th>
+          </tr>
+        </thead>
+        <tbody id="tariffsListBody">
+          <tr><td colspan="5"><div class="empty-state"><div class="empty-state-icon">📭</div><div class="empty-state-text">Нет данных. Создайте первый тариф выше.</div></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- ==================== MODALS ==================== -->
+
+<!-- Instant Deduct Modal -->
+<div class="modal-overlay" id="modal-instantDeduct">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">💸 Мгновенное списание</div>
+    <div class="input-group">
+      <label>Объём</label>
+      <input type="number" class="input-field" id="deductAmount" placeholder="5" min="0.01" step="0.01">
+    </div>
+    <div class="input-group">
+      <label>Тип ресурса</label>
+      <select class="input-field" id="deductType">
+        <option value="TRAFFIC">Трафик (ГБ)</option>
+        <option value="MINUTES">Минуты</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button class="btn btn-secondary" style="flex:1" onclick="closeModal('instantDeduct')">Отмена</button>
+      <button class="btn btn-primary" style="flex:1" onclick="instantDeduct()">Списать</button>
+    </div>
+  </div>
+</div>
+
+<!-- Anomaly Modal -->
+<div class="modal-overlay" id="modal-anomaly">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title"> Запуск аномалии</div>
+    <div class="input-group">
+      <label>Объём аномалии (ГБ)</label>
+      <input type="number" class="input-field" id="anomalyAmount" placeholder="15" min="0.01" step="0.01">
+    </div>
+    <div class="input-group">
+      <label>Длительность (виртуальных часов)</label>
+      <input type="number" class="input-field" id="anomalyDuration" value="6" min="1">
+    </div>
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button class="btn btn-secondary" style="flex:1" onclick="closeModal('anomaly')">Отмена</button>
+      <button class="btn btn-danger" style="flex:1" onclick="startAnomaly()">Запустить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delayed Event Modal -->
+<div class="modal-overlay" id="modal-delayed">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">⏪ Запоздалое событие</div>
+    <div class="input-group">
+      <label>Объём (ГБ)</label>
+      <input type="number" class="input-field" id="delayedAmount" placeholder="1.5" min="0.01" step="0.01">
+    </div>
+    <div class="input-group">
+      <label>Часов назад</label>
+      <input type="number" class="input-field" id="delayedHours" placeholder="3" min="1">
+    </div>
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button class="btn btn-secondary" style="flex:1" onclick="closeModal('delayed')">Отмена</button>
+      <button class="btn btn-primary" style="flex:1" onclick="sendDelayedEvent()">Отправить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Bulk Generation Modal -->
+<div class="modal-overlay" id="modal-bulk">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">📦 Массовая генерация</div>
+    <div class="input-group">
+      <label>Количество событий на пользователя</label>
+      <input type="number" class="input-field" id="bulkCount" placeholder="10" min="1">
+    </div>
+    <div class="input-group">
+      <label>Тип ресурса</label>
+      <select class="input-field" id="bulkType">
+        <option value="TRAFFIC">Трафик (ГБ)</option>
+        <option value="MINUTES">Минуты</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button class="btn btn-secondary" style="flex:1" onclick="closeModal('bulk')">Отмена</button>
+      <button class="btn btn-primary" style="flex:1" onclick="bulkGenerate()">Сгенерировать</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ==================== STATE ====================
+const state = {
+  realTime: new Date(),
+  virtualTime: new Date(),
+  multiplier: 1,
+  isPaused: false,
+  isAccelerated: false,
+  targetMode: 'user',
+  bgMode: 'simple',
+  activeGenerations: [],
+  genIdCounter: 0,
+  tariffs: [
+    { id: 1, name: 'Базовый', traffic: 30, minutes: 600 },
+    { id: 2, name: 'Семейный', traffic: 50, minutes: 500 },
+    { id: 3, name: 'Максимум', traffic: 100, minutes: 1200 }
+  ],
+  users: [
+    { id: 1, phone: '+79991234567', groupId: 1, groupName: 'Семья Ивановых', role: 'owner', status: 'active', name: 'Мама' },
+    { id: 2, phone: '+79991234568', groupId: 1, groupName: 'Семья Ивановых', role: 'member', status: 'active', name: 'Папа' },
+    { id: 3, phone: '+79991234569', groupId: 1, groupName: 'Семья Ивановых', role: 'member', status: 'active', name: 'Ребёнок 1' },
+    { id: 4, phone: '+79991234570', groupId: 2, groupName: 'Семья Петровых', role: 'owner', status: 'active', name: 'Папа П.' },
+    { id: 5, phone: '+79991234571', groupId: 2, groupName: 'Семья Петровых', role: 'member', status: 'active', name: 'Мама П.' }
+  ],
+  groups: [
+    { id: 1, ownerId: 1, ownerName: 'Мама', status: 'active', members: 3, created: '15.09.2026' },
+    { id: 2, ownerId: 4, ownerName: 'Папа П.', status: 'active', members: 2, created: '01.10.2026' }
+  ]
+};
+
+// ==================== TAB SWITCHING ====================
+function switchTab(tabName) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+  document.getElementById(`tab-${tabName}`).classList.add('active');
+
+  if (tabName === 'dashboard') {
+    loadDashboardData();
+  }
+  if (tabName === 'events') {
+    populateEventSelects();
+  }
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+});
+
+// ==================== TOAST NOTIFICATIONS ====================
+function showToast(message, type = 'success') {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+// ==================== TIME MANAGEMENT ====================
+function formatTime(date) {
+  return date.toLocaleTimeString('ru-RU', { hour12: false });
+}
+
+function formatDateTime(date) {
+  const d = date.toLocaleDateString('ru-RU');
+  const t = date.toLocaleTimeString('ru-RU', { hour12: false });
+  return `${d} ${t}`;
+}
+
+function updateTimeDisplay() {
+  const now = new Date();
+  state.realTime = now;
+
+  if (!state.isPaused) {
+    if (state.isAccelerated) {
+      const diff = (now - state._lastRealUpdate) * state.multiplier;
+      state.virtualTime = new Date(state.virtualTime.getTime() + diff);
+    } else {
+      state.virtualTime = new Date(now);
+    }
+  }
+  state._lastRealUpdate = now;
+
+  const vt = formatTime(state.virtualTime);
+  const vdt = formatDateTime(state.virtualTime);
+  const rt = formatTime(state.realTime);
+  const rdt = formatDateTime(state.realTime);
+
+  // Global header
+  document.getElementById('realTimeDisplay').textContent = rt;
+  document.getElementById('realTimeBadge').textContent = rdt;
+  document.getElementById('virtualTimeBadgeText').textContent = vdt;
+
+  const vtBadge = document.getElementById('virtualTimeBadge');
+  vtBadge.className = `time-badge virtual${state.isPaused ? ' paused' : ''}`;
+
+  const statusBadge = document.getElementById('globalStatus');
+  statusBadge.textContent = state.isPaused ? 'На паузе' : 'Активна';
+  statusBadge.className = `status-badge ${state.isPaused ? 'paused' : 'active'}`;
+
+  // Dashboard tab
+  document.getElementById('dashVirtualTime').textContent = vt;
+  document.getElementById('dashMultiplier').textContent = `×${state.multiplier}`;
+  document.getElementById('dashStatus').textContent = state.isPaused ? 'На паузе' : 'Активна';
+  document.getElementById('dashStatus').style.color = state.isPaused ? 'var(--red)' : 'var(--green)';
+
+  // Time tab
+  document.getElementById('timeControlVirtual').textContent = vt;
+  document.getElementById('timeControlMultiplier').textContent = `×${state.multiplier}`;
+  document.getElementById('timeControlStatus').textContent = state.isPaused ? '● Генерация на паузе' : '● Генерация активна';
+  document.getElementById('timeControlStatus').style.color = state.isPaused ? 'var(--red)' : 'var(--green)';
+  document.getElementById('infoRealTime').textContent = rt;
+  document.getElementById('infoVirtualTime').textContent = vt;
+  document.getElementById('infoMultiplier').textContent = `×${state.multiplier}`;
+  document.getElementById('infoStatus').textContent = state.isPaused ? 'На паузе' : 'Активна';
+  document.getElementById('infoStatus').style.color = state.isPaused ? 'var(--red)' : 'var(--green)';
+}
+
+setInterval(updateTimeDisplay, 1000);
+state._lastRealUpdate = new Date();
+
+function accelerateTime() {
+  const input = document.getElementById('multiplierInput');
+  const error = document.getElementById('multiplierError');
+  const val = parseInt(input.value);
+
+  if (!val || val < 1) {
+    error.textContent = 'Введите корректное значение (минимум 1)';
+    error.classList.add('visible');
+    input.classList.add('error');
+    return;
+  }
+
+  error.classList.remove('visible');
+  input.classList.remove('error');
+
+  state.multiplier = val;
+  state.isAccelerated = true;
+  state.isPaused = false;
+  input.disabled = true;
+
+  document.getElementById('btnPause').innerHTML = ' Пауза';
+  document.getElementById('btnPause').className = 'btn btn-secondary btn-full';
+
+  showToast(`Время ускорено в ${val} раз`, 'success');
+}
+
+function resetTime() {
+  state.multiplier = 1;
+  state.isAccelerated = false;
+  state.isPaused = false;
+  state.virtualTime = new Date();
+
+  document.getElementById('multiplierInput').disabled = false;
+  document.getElementById('multiplierInput').value = '1000';
+  document.getElementById('btnPause').innerHTML = ' Пауза';
+  document.getElementById('btnPause').className = 'btn btn-secondary btn-full';
+
+  showToast('Время сброшено до реального', 'success');
+}
+
+function togglePause() {
+  const btn = document.getElementById('btnPause');
+
+  if (state.isPaused) {
+    state.isPaused = false;
+    btn.innerHTML = ' Пауза';
+    btn.className = 'btn btn-secondary btn-full';
+    showToast('Генерация возобновлена', 'success');
+  } else {
+    state.isPaused = true;
+    btn.innerHTML = '▶ Возобновить';
+    btn.className = 'btn btn-success btn-full';
+    showToast('Генерация приостановлена', 'info');
+  }
+}
+
+// ==================== DASHBOARD DATA ====================
+function loadDashboardData() {
+  renderUsersTable();
+  renderGroupsTable();
+  renderTariffsTable();
+}
+
+function renderUsersTable() {
+  const tbody = document.getElementById('usersTableBody');
+  tbody.innerHTML = state.users.map(u => `
+    <tr>
+      <td>${u.id}</td>
+      <td>${u.phone}</td>
+      <td>${u.groupName}</td>
+      <td><span class="role-badge ${u.role}">${u.role === 'owner' ? 'Владелец' : 'Участник'}</span></td>
+      <td style="color:var(--green)">● ${u.status === 'active' ? 'Активен' : u.status}</td>
+    </tr>
+  `).join('');
+}
+
+function renderGroupsTable() {
+  const tbody = document.getElementById('groupsTableBody');
+  tbody.innerHTML = state.groups.map(g => `
+    <tr>
+      <td>${g.id}</td>
+      <td>${g.ownerName}</td>
+      <td style="color:var(--green)">● ${g.status}</td>
+      <td>${g.members}</td>
+      <td>${g.created}</td>
+    </tr>
+  `).join('');
+}
+
+function renderTariffsTable() {
+  const tbody = document.getElementById('tariffsTableBody');
+  tbody.innerHTML = state.tariffs.map(t => `
+    <tr>
+      <td>${t.id}</td>
+      <td>${t.name}</td>
+      <td>${t.traffic}</td>
+      <td>${t.minutes}</td>
+    </tr>
+  `).join('');
+}
+
+function refreshUsers() {
+  showToast('Данные пользователей обновлены', 'success');
+  renderUsersTable();
+}
+
+function refreshGroups() {
+  showToast('Данные групп обновлены', 'success');
+  renderGroupsTable();
+}
+
+function refreshTariffs() {
+  showToast('Данные тарифов обновлены', 'success');
+  renderTariffsTable();
+  renderTariffsList();
+}
+
+// ==================== EVENT EMULATION ====================
+function setTargetMode(mode) {
+  state.targetMode = mode;
+  document.querySelectorAll('[data-target]').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[data-target="${mode}"]`).classList.add('active');
+  document.getElementById('targetUserFields').style.display = mode === 'user' ? 'block' : 'none';
+  document.getElementById('targetGroupFields').style.display = mode === 'group' ? 'block' : 'none';
+}
+
+function setBgMode(mode) {
+  state.bgMode = mode;
+  document.querySelectorAll('[data-mode]').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+  document.getElementById('simpleModeFields').style.display = mode === 'simple' ? 'block' : 'none';
+  document.getElementById('realisticModeFields').style.display = mode === 'realistic' ? 'block' : 'none';
+}
+
+function populateEventSelects() {
+  const groupSelects = [document.getElementById('eventGroupSelect'), document.getElementById('eventGroupSelect2')];
+  groupSelects.forEach(sel => {
+    if (!sel) return;
+    sel.innerHTML = '<option value="">Выберите группу...</option>' +
+      state.groups.map(g => `<option value="${g.id}">${g.ownerName} (${g.members} уч.)</option>`).join('');
+  });
+  onEventGroupChange();
+}
+
+function onEventGroupChange() {
+  const groupId = parseInt(document.getElementById('eventGroupSelect').value);
+  const userSelect = document.getElementById('eventUserSelect');
+  const users = groupId ? state.users.filter(u => u.groupId === groupId) : [];
+  userSelect.innerHTML = '<option value="">Выберите пользователя...</option>' +
+    users.map(u => `<option value="${u.id}">${u.name} (${u.phone})</option>`).join('');
+}
+
+function getSelectedUserId() {
+  return parseInt(document.getElementById('eventUserSelect').value) || null;
+}
+
+function getSelectedGroupId() {
+  if (state.targetMode === 'user') {
+    return parseInt(document.getElementById('eventGroupSelect').value) || null;
+  }
+  return parseInt(document.getElementById('eventGroupSelect2').value) || null;
+}
+
+function startBackgroundGen() {
+  const userId = getSelectedUserId();
+  const groupId = getSelectedGroupId();
+
+  if (state.targetMode === 'user' && !userId) {
+    showToast('Выберите пользователя', 'error');
+    return;
+  }
+  if (state.targetMode === 'group' && !groupId) {
+    showToast('Выберите группу', 'error');
+    return;
+  }
+
+  const genId = ++state.genIdCounter;
+  const user = state.users.find(u => u.id === userId);
+  const group = state.groups.find(g => g.id === groupId);
+
+  let mode, modeLabel;
+  if (state.bgMode === 'simple') {
+    const interval = document.getElementById('bgInterval').value;
+    mode = `SIMPLE (${interval}с)`;
+    modeLabel = `Простой (${interval}с)`;
+  } else {
+    const profile = document.getElementById('bgProfile').value;
+    mode = profile;
+    modeLabel = profile === 'TRIP' ? 'Поездка' : 'Стандарт';
+  }
+
+  const gen = {
+    id: genId,
+    target: user ? `${user.name} (${user.phone})` : (group ? group.ownerName : 'Неизвестно'),
+    type: 'Фоновая',
+    mode: mode,
+    modeLabel: modeLabel,
+    status: 'Активна',
+    startedAt: formatTime(state.virtualTime),
+    timer: null
+  };
+
+  state.activeGenerations.push(gen);
+
+  // Simulate background generation timer
+  if (state.bgMode === 'simple') {
+    const interval = parseInt(document.getElementById('bgInterval').value) * 1000;
+    gen.timer = setInterval(() => {
+      console.log(`[GEN-${genId}] ConsumptionEvent published for user ${userId}`);
+    }, Math.min(interval, 5000)); // cap for demo
+  }
+
+  renderActiveGenerations();
+  showToast(`Фоновая генерация запущена${modeLabel ? ' (режим: ' + modeLabel + ')' : ''}`, 'success');
+}
+
+function stopGeneration(genId) {
+  const gen = state.activeGenerations.find(g => g.id === genId);
+  if (gen) {
+    if (gen.timer) clearInterval(gen.timer);
+    state.activeGenerations = state.activeGenerations.filter(g => g.id !== genId);
+    renderActiveGenerations();
+    showToast(`Генерация остановлена: ${gen.target}`, 'success');
+  }
+}
+
+function renderActiveGenerations() {
+  const tbody = document.getElementById('activeGenTableBody');
+  if (state.activeGenerations.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><div class="empty-state-icon">📭</div><div class="empty-state-text">Нет активных генераций</div></div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = state.activeGenerations.map(g => `
+    <tr>
+      <td>${g.target}</td>
+      <td>${g.type}</td>
+      <td>${g.modeLabel}</td>
+      <td style="color:var(--green)">● ${g.status}</td>
+      <td>${g.startedAt}</td>
+      <td><button class="btn btn-danger btn-sm" onclick="stopGeneration(${g.id})">Стоп</button></td>
+    </tr>
+  `).join('');
+}
+
+// ==================== INSTANT ACTIONS ====================
+function openModal(name) {
+  document.getElementById(`modal-${name}`).classList.add('visible');
+}
+
+function closeModal(name) {
+  document.getElementById(`modal-${name}`).classList.remove('visible');
+}
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) overlay.classList.remove('visible');
+  });
+});
+
+function instantDeduct() {
+  const userId = getSelectedUserId();
+  const amount = parseFloat(document.getElementById('deductAmount').value);
+  const type = document.getElementById('deductType').value;
+
+  if (!userId) { showToast('Выберите пользователя', 'error'); return; }
+  if (!amount || amount <= 0) { showToast('Введите корректный объём', 'error'); return; }
+
+  const user = state.users.find(u => u.id === userId);
+  console.log(`[INSTANT] ConsumptionEvent: user=${userId}, amount=${amount}, type=${type}, timestamp=${formatDateTime(state.virtualTime)}`);
+
+  closeModal('instantDeduct');
+  showToast(`Событие опубликовано: списание ${amount} ${type === 'TRAFFIC' ? 'ГБ' : 'мин'} для ${user.name}`, 'success');
+}
+
+function startAnomaly() {
+  const userId = getSelectedUserId();
+  const amount = parseFloat(document.getElementById('anomalyAmount').value);
+  const duration = parseInt(document.getElementById('anomalyDuration').value);
+
+  if (!userId) { showToast('Выберите пользователя', 'error'); return; }
+  if (!amount || amount <= 0) { showToast('Введите корректный объём', 'error'); return; }
+
+  const user = state.users.find(u => u.id === userId);
+  const genId = ++state.genIdCounter;
+
+  const gen = {
+    id: genId,
+    target: `${user.name} (${user.phone})`,
+    type: 'Аномалия',
+    mode: `TRAFFIC ${amount}GB (за ${duration}ч)`,
+    modeLabel: `Аномалия ${amount}ГБ / ${duration}ч`,
+    status: 'Активна',
+    startedAt: formatTime(state.virtualTime),
+    timer: null
+  };
+
+  // Simulate anomaly events
+  const eventInterval = (duration * 3600000) / 20; // 20 events over duration
+  gen.timer = setInterval(() => {
+    console.log(`[ANOMALY-${genId}] AnomalyEvent: user=${userId}, is_anomaly=true`);
+  }, Math.min(eventInterval, 3000));
+
+  state.activeGenerations.push(gen);
+  renderActiveGenerations();
+  closeModal('anomaly');
+  showToast(`Аномалия запущена: ${amount} ГБ за ${duration} виртуальных часов`, 'success');
+}
+
+function sendDelayedEvent() {
+  const userId = getSelectedUserId();
+  const amount = parseFloat(document.getElementById('delayedAmount').value);
+  const hours = parseInt(document.getElementById('delayedHours').value);
+
+  if (!userId) { showToast('Выберите пользователя', 'error'); return; }
+  if (!amount || amount <= 0) { showToast('Введите объём', 'error'); return; }
+  if (!hours || hours <= 0) { showToast('Введите количество часов', 'error'); return; }
+
+  const user = state.users.find(u => u.id === userId);
+  const eventTimestamp = new Date(state.virtualTime.getTime() - hours * 3600000);
+
+  console.log(`[DELAYED] ConsumptionEvent: user=${userId}, amount=${amount}, timestamp=${formatDateTime(eventTimestamp)}`);
+
+  closeModal('delayed');
+  showToast(`Запоздалое событие опубликовано (event_timestamp: ${formatTime(eventTimestamp)})`, 'success');
+}
+
+function bulkGenerate() {
+  const count = parseInt(document.getElementById('bulkCount').value);
+  const type = document.getElementById('bulkType').value;
+
+  if (!count || count <= 0) { showToast('Введите количество', 'error'); return; }
+
+  console.log(`[BULK] Generating ${count} ${type} events for all users`);
+  state.users.forEach(u => {
+    for (let i = 0; i < count; i++) {
+      console.log(`  → user=${u.id}, event=${i+1}/${count}`);
+    }
+  });
+
+  closeModal('bulk');
+  showToast(`Сгенерировано ${count} событий для ${state.users.length} пользователей`, 'success');
+}
+
+// ==================== TARIFFS ====================
+function createTariff() {
+  const name = document.getElementById('tariffName').value.trim();
+  const traffic = parseFloat(document.getElementById('tariffTraffic').value);
+  const minutes = parseInt(document.getElementById('tariffMinutes').value);
+
+  let hasError = false;
+
+  // Reset errors
+  ['tariffName', 'tariffTraffic', 'tariffMinutes'].forEach(id => {
+    document.getElementById(id).classList.remove('error');
+    document.getElementById(id + 'Error').classList.remove('visible');
+  });
+
+  if (!name) {
+    document.getElementById('tariffName').classList.add('error');
+    document.getElementById('tariffNameError').textContent = 'Название обязательно';
+    document.getElementById('tariffNameError').classList.add('visible');
+    hasError = true;
+  }
+
+  if (state.tariffs.some(t => t.name.toLowerCase() === name.toLowerCase())) {
+    document.getElementById('tariffName').classList.add('error');
+    document.getElementById('tariffNameError').textContent = 'Тариф с таким названием уже существует';
+    document.getElementById('tariffNameError').classList.add('visible');
+    hasError = true;
+  }
+
+  if (isNaN(traffic) || traffic < 0) {
+    document.getElementById('tariffTraffic').classList.add('error');
+    document.getElementById('tariffTrafficError').textContent = 'Введите корректное значение';
+    document.getElementById('tariffTrafficError').classList.add('visible');
+    hasError = true;
+  }
+
+  if (isNaN(minutes) || minutes < 0) {
+    document.getElementById('tariffMinutes').classList.add('error');
+    document.getElementById('tariffMinutesError').textContent = 'Введите корректное значение';
+    document.getElementById('tariffMinutesError').classList.add('visible');
+    hasError = true;
+  }
+
+  if (hasError) return;
+
+  const newTariff = {
+    id: state.tariffs.length + 1,
+    name,
+    traffic,
+    minutes
+  };
+
+  state.tariffs.push(newTariff);
+
+  // Clear form
+  document.getElementById('tariffName').value = '';
+  document.getElementById('tariffTraffic').value = '';
+  document.getElementById('tariffMinutes').value = '';
+
+  renderTariffsList();
+  renderTariffsTable();
+  showToast(`Тариф '${name}' успешно создан`, 'success');
+}
+
+function renderTariffsList() {
+  const tbody = document.getElementById('tariffsListBody');
+  if (state.tariffs.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><div class="empty-state-icon">📭</div><div class="empty-state-text">Нет данных. Создайте первый тариф выше.</div></div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = state.tariffs.map(t => `
+    <tr>
+      <td>${t.id}</td>
+      <td>${t.name}</td>
+      <td>${t.traffic}</td>
+      <td>${t.minutes}</td>
+      <td><button class="btn btn-danger btn-sm" onclick="deleteTariff(${t.id})">Удалить</button></td>
+    </tr>
+  `).join('');
+}
+
+function deleteTariff(id) {
+  state.tariffs = state.tariffs.filter(t => t.id !== id);
+  renderTariffsList();
+  renderTariffsTable();
+  showToast('Тариф удалён', 'info');
+}
+
+// ==================== INIT ====================
+loadDashboardData();
+renderTariffsList();
+updateTimeDisplay();
+</script>
+
+</body>
+</html>

@@ -47,3 +47,7 @@ application_local.yml
 
 .env
 env
+
+frontend/node_modules/
+frontend/dist/
+frontend/.env
