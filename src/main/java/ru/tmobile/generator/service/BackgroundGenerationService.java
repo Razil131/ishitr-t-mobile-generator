@@ -153,8 +153,7 @@ public class BackgroundGenerationService {
                                 task.resourceType(),
                                 newAccumulatedAmount,
                                 curVirtualTime,
-                                systemZoneId,
-                                false
+                                systemZoneId
                             );
 
                             publisher.publish(event);
@@ -278,8 +277,7 @@ public class BackgroundGenerationService {
                 task.resourceType(),
                 event.amountGB(),
                 event.consumedAt(),
-                systemZoneId,
-                false
+                systemZoneId
             ));
 
             index++;
@@ -368,8 +366,7 @@ public class BackgroundGenerationService {
                         state.resourceType(),
                         state.amountPerEvent(),
                         eventTime,
-                        systemZoneId,
-                        true
+                        systemZoneId
                 ));
                 sent++;
             }

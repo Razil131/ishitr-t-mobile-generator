@@ -50,8 +50,7 @@ public class InstantActionsController {
                 request.resourceType(),
                 request.amount(),
                 now,
-                systemZoneId,
-                false
+                systemZoneId
         );
         publisher.publish(event);
 
@@ -109,8 +108,7 @@ public class InstantActionsController {
                 request.resourceType(),
                 request.amount(),
                 delayedTime,
-                systemZoneId,
-                false
+                systemZoneId
         );
         publisher.publish(event);
 

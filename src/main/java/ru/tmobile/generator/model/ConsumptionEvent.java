@@ -22,18 +22,14 @@ public record ConsumptionEvent(
     double amount,
 
     @JsonProperty("event_timestamp")
-    String eventTimestamp,
-
-    @JsonProperty("is_anomaly")
-    boolean isAnomaly)
+    String eventTimestamp)
 {
     public static ConsumptionEvent create(
         Long userId,
         ResourceType resourceType,
         double amount,
         Instant timestamp,
-        ZoneId zoneId,
-        boolean isAnomaly
+        ZoneId zoneId
     ) {
         return new ConsumptionEvent(
             UUID.randomUUID(),
@@ -42,8 +38,7 @@ public record ConsumptionEvent(
             amount,
             DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(
                 timestamp.atZone(zoneId)
-            ),
-            isAnomaly
+            )
         );
     }
 }

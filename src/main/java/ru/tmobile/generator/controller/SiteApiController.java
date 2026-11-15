@@ -149,7 +149,7 @@ public class SiteApiController {
 
         ConsumptionEvent event = ConsumptionEvent.create(
                 userId, resourceType, amount,
-                virtualClock.instant(), timeZone, false
+                virtualClock.instant(), timeZone
         );
         publisher.publish(event);
 
@@ -165,7 +165,7 @@ public class SiteApiController {
 
         ConsumptionEvent event = ConsumptionEvent.create(
                 userId, ResourceType.TRAFFIC, amount,
-                virtualClock.instant(), timeZone, true
+                virtualClock.instant(), timeZone
         );
         publisher.publish(event);
 
@@ -191,7 +191,7 @@ public class SiteApiController {
         Instant delayedTime = virtualClock.instant().minusSeconds((long) (hoursAgo * 3600));
         ConsumptionEvent event = ConsumptionEvent.create(
                 userId, ResourceType.TRAFFIC, amount,
-                delayedTime, timeZone, false
+                delayedTime, timeZone
         );
         publisher.publish(event);
 
@@ -214,7 +214,7 @@ public class SiteApiController {
                         : 1.0 + Math.random() * 10.0;
                 publisher.publish(ConsumptionEvent.create(
                         userId, resourceType, amt,
-                        virtualClock.instant(), timeZone, false
+                        virtualClock.instant(), timeZone
                 ));
                 generated++;
             }
