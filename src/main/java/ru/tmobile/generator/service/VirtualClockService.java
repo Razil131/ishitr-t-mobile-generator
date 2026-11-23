@@ -97,13 +97,17 @@ public class VirtualClockService extends Clock{
             formatTime(currentVirtualTime)
         );
         
-        kafkaTemplate.send(TIME_CHANGE_TOPIC, null, event).whenComplete((result, ex) -> {
-            if (ex == null){
-                log.info("[Kafka] TimeChangeEvent published: {}", event);
-            } else {
-                log.error("[Kafka] Failed to publish TimeChangeEvent", ex);
-            }
-        });
+        try {
+            kafkaTemplate.send(TIME_CHANGE_TOPIC, null, event).whenComplete((result, ex) -> {
+                if (ex == null){
+                    log.info("[Kafka] TimeChangeEvent published: {}", event);
+                } else {
+                    log.error("[Kafka] Failed to publish TimeChangeEvent", ex);
+                }
+            });
+        } catch (Exception e) {
+            log.error("[Kafka] Failed to send TimeChangeEvent (sync error)", e);
+        }
     }
 
     private String formatTime(long epochMillis){
