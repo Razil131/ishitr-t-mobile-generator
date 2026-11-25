@@ -6,10 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.tmobile.generator.client.BackendUsersClient;
-import ru.tmobile.generator.model.GenerationMode;
 import ru.tmobile.generator.model.GeneratorApiModels.*;
 import ru.tmobile.generator.model.ProfileType;
-import ru.tmobile.generator.model.ResourceType;
 import ru.tmobile.generator.service.BackgroundGenerationService;
 
 import java.util.List;
@@ -64,7 +62,7 @@ public class GeneratorController {
     }
 
     @PostMapping("/all/start")
-    public ResponseEntity<Map<String, Object>> startAllGeneration(
+    public ResponseEntity<MassGenerationStartResponse> startAllGeneration(
             @Valid @RequestBody StartAllGenerationRequest request
     ) {
         log.info("Starting mass generation for all users, type {}", request.resourceType());
@@ -72,12 +70,7 @@ public class GeneratorController {
         List<Long> userIds = backendUsersClient.getActiveUserIds();
         if (userIds.isEmpty()) {
             log.warn("No active users found in Backend");
-            return ResponseEntity.ok(Map.of(
-                    "total_active_users", 0,
-                    "started_count", 0,
-                    "ignored_count", 0,
-                    "message", "No active users found to start generation"
-            ));
+            return ResponseEntity.ok(new MassGenerationStartResponse(0, 0, 0, "No active users found to start generation"));
         }
 
         ProfileType profile = request.profileType() != null ? request.profileType() : ProfileType.STANDARD;
@@ -104,12 +97,7 @@ public class GeneratorController {
 
         String message = String.format("Массовая генерация запущена для %d пользователей. %d пользователей проигнорированы (уже активны).", startedCount, ignoredCount);
 
-        return ResponseEntity.ok(Map.of(
-                "total_active_users", userIds.size(),
-                "started_count", startedCount,
-                "ignored_count", ignoredCount,
-                "message", message
-        ));
+        return ResponseEntity.ok(new MassGenerationStartResponse(userIds.size(), startedCount, ignoredCount, message));
     }
 
     @PostMapping("/all/stop")

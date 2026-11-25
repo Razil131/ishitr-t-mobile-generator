@@ -61,4 +61,11 @@ public final class GeneratorApiModels {
         @NotNull @JsonProperty("amount") Double amount,
         @NotNull @JsonProperty("hours_ago") Integer hoursAgo
     ) {}
+
+    public record MassGenerationStartResponse(
+        @JsonProperty("total_active_users") int totalActiveUsers,
+        @JsonProperty("started_count") int startedCount,
+        @JsonProperty("ignored_count") int ignoredCount,
+        @JsonProperty("message") String message
+    ) {}
 }
